@@ -72,9 +72,11 @@ A summary of keyboard shortcuts for quick access to tools:
 | :---: | :--- |
 | **`M`** | Toggle Interactive Lens (Magnifier) |
 | **`C`** | Toggle Measurement Tool (Ruler) |
-| **`A`** | Toggle Rotation |
-| **`L`** | Toggle Light Control |
-| **`Home`** | Reset View to default |
+| **`V`** | Toggle Vector Layer |
+| **`A`** | Toggle Annotation Layer |
+| **`R`** | Rotate |
+| **`L`** | Light Control |
+| **`Home`** | Return to Main View |
 | **`+` / `-`** | Zoom In / Zoom Out |
 
 ---
