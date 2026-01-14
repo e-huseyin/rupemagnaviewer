@@ -19,7 +19,7 @@
       background: #fff;
     }
 
-    /* Masaüstü için varsayılan gizleme ayarı */
+    /* Masaüstü ve Genel Düzen */
     body {
       overflow: hidden;
     }
@@ -40,75 +40,82 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 6px;
+      padding: 10px;
       overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Aktif Kartlar İçin Hover ve İmleç */
+    .card.clickable {
       cursor: pointer;
     }
 
     .card.clickable:hover {
       box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      transform: translateY(-2px);
+      transform: translateY(-4px);
+      z-index: 2;
     }
 
     .card img {
       width: 100%;
-      height: calc(100% - 28px);
+      height: auto;
+      max-height: calc(100% - 35px); /* Yazı alanı için pay bırak */
       object-fit: contain;
       display: block;
+      transition: filter 0.3s ease;
     }
 
     .caption {
       font-size: 14px;
-      margin-top: 4px;
+      margin-top: 8px;
       color: #000;
-      text-decoration: none;
-      font-family: 'Lucida Sans Unicode', Monaco, monospace;
       font-weight: 500;
+      line-height: 1.2;
     }
 
+    /* Marka/Başlık Kartı */
     .branding {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       line-height: 1.3;
-      font-size: 16px;
-      font-family: 'Lucida Sans Unicode', Monaco, monospace;
       cursor: default;
+      background: #fcfcfc;
     }
 
     .branding h1 {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 700;
-      margin: 4px 0;
-      letter-spacing: 1px;
+      margin-bottom: 5px;
+      letter-spacing: 0.5px;
     }
 
     .branding p {
-      font-size: 16px;
-      opacity: 0.85;
-      margin-top: 4px;
-      font-weight: 500;
+      font-size: 15px;
+      opacity: 0.7;
     }
 
-    /* Orta Boy Ekranlar */
-    @media (max-width: 1000px) {
+    /* Orta Boy Ekranlar (Laptops) */
+    @media (max-width: 1100px) {
       .grid {
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(4, 1fr);
       }
+      .branding h1 { font-size: 20px; }
     }
 
     /* Tablet Görünümü */
-    @media (max-width: 750px) {
+    @media (max-width: 800px) {
       .grid {
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(6, 1fr);
       }
     }
 
-    /* MOBİL GÖRÜNÜM (Tek Sütun ve Kaydırılabilir) */
+    /* MOBİL GÖRÜNÜM */
     @media (max-width: 600px) {
       body {
         overflow-y: auto;
@@ -120,40 +127,40 @@
         flex-direction: column;
         height: auto;
         width: 100%;
-        gap: 20px;
-        padding: 20px 10px;
+        gap: 0; /* Mobilde kartları ayırmak için border kullanıyoruz */
+        padding: 0;
       }
 
       .branding {
         order: -1;
-        padding: 40px 10px;
+        padding: 50px 20px;
         border-bottom: 1px solid #eee;
-        margin-bottom: 10px;
       }
 
       .card {
         width: 100%;
         height: auto;
-        min-height: 300px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #f9f9f9;
+        padding: 30px 15px;
+        border-bottom: 1px solid #f0f0f0;
       }
 
       .card img {
-        height: auto;
-        max-height: 400px;
-        margin-bottom: 10px;
+        max-height: 350px;
+        margin-bottom: 15px;
       }
 
       .caption {
         font-size: 16px;
-        padding: 0 10px;
+      }
+      
+      .card.clickable:hover {
+        transform: none; /* Mobilde zıplama efektini kaldır */
       }
     }
 
-    /* Coming Soon Etiketi (Görselin üzerinde hafif bir efekt) */
+    /* Hazırlanıyor (Coming Soon) Ayarları - Tüm Ekranlarda Eşit */
     .card.coming-soon {
-      opacity: 0.7;
+      opacity: 0.6;
       cursor: not-allowed;
     }
     
@@ -163,80 +170,70 @@
     }
 
     .card.coming-soon img {
-      filter: grayscale(100%) blur(1px);
+      filter: grayscale(100%) contrast(0.8);
     }
   </style>
 </head>
 
 <body>
   <div class="grid">
-    <!-- Başlık Bölümü -->
+    <!-- Branding -->
     <div class="card branding">
       <h1>Rupe Magna Viewer</h1>
       <p>Reflectance Transformation Imaging</p>
     </div>
 
-    <!-- Figür 01 -->
+    <!-- Figures -->
     <div class="card clickable" onclick="window.open('F01/F01-RTI09-PTM-DeepZoom/index.html','_blank')">
       <img src="F01/F01.png" alt="Sector AA, The Praying Figure with Spiral">
       <p class="caption">The Praying Figure with Spiral</p>
     </div>
 
-    <!-- Figür 02 -->
-    <div class="card clickable coming-soon" title="Coming Soon">
+    <div class="card coming-soon" title="Coming Soon">
       <img src="F02/F02.png" alt="Sector B, The Praying Woman Figure">
       <p class="caption">The Praying Woman Figure (Coming Soon)</p>
     </div>
 
-    <!-- Figür 03 -->
-    <div class="card clickable coming-soon" title="Coming Soon">
+    <div class="card coming-soon" title="Coming Soon">
       <img src="F03/F03.png" alt="Sector F, The Spiral Figure">
       <p class="caption">The Spiral Figure (Coming Soon)</p>
     </div>
 
-    <!-- Figür 04 -->
     <div class="card clickable" onclick="window.open('F04/F04-RTI23-PTM-DeepZoom/index.html','_blank')">
       <img src="F04/F04.png" alt="Sector L, The Warrior Figure with Shield">
       <p class="caption">The Warrior Figure with Shield</p>
     </div>
 
-    <!-- Figür 05 -->
-    <div class="card clickable coming-soon" title="Coming Soon">
+    <div class="card coming-soon" title="Coming Soon">
       <img src="F05/F05.png" alt="Sector L, The Second Warrior Figure">
       <p class="caption">The Second Warrior Figure (Coming Soon)</p>
     </div>
 
-    <!-- Figür 06 -->
-    <div class="card clickable coming-soon" title="Coming Soon">
+    <div class="card coming-soon" title="Coming Soon">
       <img src="F06/F06.png" alt="Sector L, The Wild Boar Figure">
       <p class="caption">The Wild Boar Figure (Coming Soon)</p>
     </div>
 
-    <!-- Figür 07 -->
     <div class="card clickable" onclick="window.open('F07/F07-RTI28-PTM-DeepZoom/index.html','_blank')">
       <img src="F07/F07.png" alt="Sector Q, The Goat Figure with a Beard">
       <p class="caption">The Goat Figure with a Beard</p>
     </div>
 
-    <!-- Figür 08 -->
     <div class="card clickable" onclick="window.open('F08/F08-RTI33-PTM-DeepZoom/index.html','_blank')">
       <img src="F08/F08.png" alt="Sector Q, The Second Goat Figure">
       <p class="caption">The Second Goat Figure</p>
     </div>
 
-    <!-- Figür 09 -->
-    <div class="card clickable coming-soon" title="Coming Soon">
+    <div class="card coming-soon" title="Coming Soon">
       <img src="F09/F09.png" alt="Sector Q, The Map-like Figure">
       <p class="caption">The Map-like Figure (Coming Soon)</p>
     </div>
 
-    <!-- Figür 10 -->
-    <div class="card clickable coming-soon" title="Coming Soon">
+    <div class="card coming-soon" title="Coming Soon">
       <img src="F10/F10.png" alt="Sector S, The Knight Figure">
       <p class="caption">The Knight Figure (Coming Soon)</p>
     </div>
 
-    <!-- Figür 11 -->
     <div class="card clickable" onclick="window.open('F11/F11-RTI40-PTM-DeepZoom/index.html','_blank')">
       <img src="F11/F11.png" alt="Sector S, The Figure with a Square">
       <p class="caption">The Figure with a Square</p>
