@@ -19,7 +19,7 @@
       background: #fff;
     }
 
-    /* Masaüstü için varsayılan gizleme ayarı, JS ile değil CSS ile scroll kontrolü */
+    /* Masaüstü için varsayılan gizleme ayarı */
     body {
       overflow: hidden;
     }
@@ -48,6 +48,7 @@
 
     .card.clickable:hover {
       box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      transform: translateY(-2px);
     }
 
     .card img {
@@ -110,21 +111,21 @@
     /* MOBİL GÖRÜNÜM (Tek Sütun ve Kaydırılabilir) */
     @media (max-width: 600px) {
       body {
-        overflow-y: auto; /* Kaydırmaya izin ver */
-        display: block;   /* Grid ortalamasını kaldır */
+        overflow-y: auto;
+        display: block;
       }
 
       .grid {
         display: flex;
         flex-direction: column;
-        height: auto;     /* Sabit yüksekliği kaldır */
+        height: auto;
         width: 100%;
-        gap: 20px;        /* Figürler arası boşluk */
+        gap: 20px;
         padding: 20px 10px;
       }
 
       .branding {
-        order: -1;        /* Her zaman en üstte görünmesi için */
+        order: -1;
         padding: 40px 10px;
         border-bottom: 1px solid #eee;
         margin-bottom: 10px;
@@ -133,7 +134,7 @@
       .card {
         width: 100%;
         height: auto;
-        min-height: 300px; /* Görsel alanı için minimum yükseklik */
+        min-height: 300px;
         padding-bottom: 20px;
         border-bottom: 1px solid #f9f9f9;
       }
@@ -145,32 +146,24 @@
       }
 
       .caption {
-        font-size: 16px; /* Mobilde daha okunaklı yazı */
+        font-size: 16px;
         padding: 0 10px;
       }
     }
 
+    /* Coming Soon Etiketi (Görselin üzerinde hafif bir efekt) */
     .card.coming-soon {
-      position: relative;
-      overflow: hidden;
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    .card.coming-soon:hover {
+      box-shadow: none;
+      transform: none;
     }
 
-    .card.coming-soon::before {
-      content: "Coming Soon";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      font-size: 24px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1;
-      opacity: 1;
-      transition: opacity 0.3s ease;
+    .card.coming-soon img {
+      filter: grayscale(100%) blur(1px);
     }
   </style>
 </head>
@@ -192,13 +185,13 @@
     <!-- Figür 02 -->
     <div class="card clickable coming-soon" title="Coming Soon">
       <img src="F02/F02.png" alt="Sector B, The Praying Woman Figure">
-      <p class="caption">The Praying Woman Figure</p>
+      <p class="caption">The Praying Woman Figure (Coming Soon)</p>
     </div>
 
     <!-- Figür 03 -->
     <div class="card clickable coming-soon" title="Coming Soon">
       <img src="F03/F03.png" alt="Sector F, The Spiral Figure">
-      <p class="caption">The Spiral Figure</p>
+      <p class="caption">The Spiral Figure (Coming Soon)</p>
     </div>
 
     <!-- Figür 04 -->
@@ -210,13 +203,13 @@
     <!-- Figür 05 -->
     <div class="card clickable coming-soon" title="Coming Soon">
       <img src="F05/F05.png" alt="Sector L, The Second Warrior Figure">
-      <p class="caption">The Second Warrior Figure</p>
+      <p class="caption">The Second Warrior Figure (Coming Soon)</p>
     </div>
 
     <!-- Figür 06 -->
     <div class="card clickable coming-soon" title="Coming Soon">
       <img src="F06/F06.png" alt="Sector L, The Wild Boar Figure">
-      <p class="caption">The Wild Boar Figure</p>
+      <p class="caption">The Wild Boar Figure (Coming Soon)</p>
     </div>
 
     <!-- Figür 07 -->
@@ -234,13 +227,13 @@
     <!-- Figür 09 -->
     <div class="card clickable coming-soon" title="Coming Soon">
       <img src="F09/F09.png" alt="Sector Q, The Map-like Figure">
-      <p class="caption">The Map-like Figure</p>
+      <p class="caption">The Map-like Figure (Coming Soon)</p>
     </div>
 
     <!-- Figür 10 -->
     <div class="card clickable coming-soon" title="Coming Soon">
       <img src="F10/F10.png" alt="Sector S, The Knight Figure">
-      <p class="caption">The Knight Figure</p>
+      <p class="caption">The Knight Figure (Coming Soon)</p>
     </div>
 
     <!-- Figür 11 -->
