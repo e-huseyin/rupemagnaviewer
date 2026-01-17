@@ -1,6 +1,6 @@
 # Rupe Magna Viewer: An Interactive Web-Based Visualisation of RTI Documentation
 
-**Live Demonstration:** **[http://archeoportfolio.github.io/rupemagnaviewer](http://archeoportfolio.github.io/rupemagnaviewer)**
+**Live Demonstration:** **[http://e-huseyin.github.io/rupemagnaviewer](http://e-huseyin.github.io/rupemagnaviewer)**
 
 ## Overview
 
