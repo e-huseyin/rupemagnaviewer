@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RTIViewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+
+    <!-- Dynamically set stylesheet via config -->
+    <link id="skinCssLink" rel="stylesheet" href="" />
+
+    <style>
+        html, body {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            overflow: hidden;
+        }
+        #openlime {
+            position:relative;
+            height: 100%
+        }
+    </style>
+</head>
+
+<body>
+    <div id="demo" class="openlime"></div>
+</body>
+
+<script>
+    const config = {
+        stylesheetUrl: 'skin.css',
+        openlimeUrl: 'openlime.min.js',
+        skinUrl: 'skin.svg',
+        rtiUrl: 'info.json',
+        rtiLabel: 'PTM-DeepZoom',
+        vectorUrl: 'vector.png',
+        vectorLabel: 'Vector On/Off'
+    };
+
+    document.getElementById('skinCssLink').href = config.stylesheetUrl;
+
+    const openlimeScript = document.createElement('script');
+    openlimeScript.src = config.openlimeUrl;
+    document.head.appendChild(openlimeScript);
+
+    openlimeScript.onload = function() {
+
+        async function autodetect() {
+            let response = await fetch('plane_0.tzi');
+            if(response.status == 200) return "tarzoom";
+            response = await fetch('plane_0.dzi');
+            if(response.status == 200) return "deepzoom";
+            response = await fetch('planes.tzi');
+            if(response.status == 200) return "itarzoom";
+            response = await fetch('plane_0.jpg');
+            if(response.status == 200) return "image";
+            alert("RTI could not be detected here");
+            return "";
+        }
+
+        async function autodetectNormals(layout) {
+            if(layout == 'tarzoom') {
+                let response = await fetch('normals.tzi');
+                if(response.status == 200) return true;
+            }
+            if(layout == 'deepzoom') {
+                let response = await fetch('normals.dzi');
+                if(response.status == 200) return true;
+            }
+            if(layout == 'image') {
+                let response = await fetch('normals.jpg');
+                if(response.status == 200) return true;
+            }
+            return false;
+        }
+
+        async function init() {
+            let layout = await autodetect();
+            let normals = await autodetectNormals(layout);
+            var lime = new OpenLIME.Viewer('#demo', { background:'black' });
+
+            let baseLayer = new OpenLIME.Layer({
+                layout: layout,
+                type:'rti',
+                url: config.rtiUrl,
+                normals: normals,
+                label: config.rtiLabel
+            });
+            lime.canvas.addLayer('RTI', baseLayer);
+
+            // Vector Layer
+            const vectorLayer = new OpenLIME.Layer({
+                type: 'image',
+                url: config.vectorUrl,
+                overlay: true,
+                visible: false,
+                label: config.vectorLabel
+            });
+            lime.canvas.addLayer('vector', vectorLayer);
+
+            let lensContentLayer = new OpenLIME.Layer({
+                layout: layout,
+                type:'rti',
+                url: config.rtiUrl,
+                normals: normals,
+                visible: false,
+                label: 'Lens'
+            });
+            lime.canvas.addLayer('RTI Normals', lensContentLayer);
+            
+            if (lensContentLayer.shader && lensContentLayer.shader.modes) {
+                lensContentLayer.setMode('normals');
+            }
+
+            const lensDashboard = new OpenLIME.LensDashboardNavigator(lime, {
+                borderColor: [0.078, 0.078, 0.078, 1],
+                borderWidth: 12,
+                containerSpace: 80
+            });
+
+            const lensLayer = new OpenLIME.Layer({
+                type: 'lens',
+                layers: [lensContentLayer],
+                camera: lime.camera,
+                radius: 200,
+                borderWidth: 0,
+                borderColor: [0, 0, 0, 0],
+                borderEnable: false,
+                dashboard: lensDashboard,
+                visible: false,
+                label: 'Lens On/Off'
+            });
+            lime.canvas.addLayer('lens', lensLayer);
+
+            const controllerLens = new OpenLIME.ControllerFocusContext({
+                lensLayer: lensLayer,
+                camera: lime.camera,
+                canvas: lime.canvas,
+                priority: -200,
+                enableDirectContextControl: true
+            });
+            lime.pointerManager.onEvent(controllerLens);
+            lensLayer.controllers.push(controllerLens);
+
+            OpenLIME.Skin.setUrl(config.skinUrl);
+            let ui = new OpenLIME.UIBasic(lime, { skin: config.skinUrl, showLightDirections: true });
+
+            ui.actions.zoomin.display = true;
+            ui.actions.zoomout.display = true;
+            ui.actions.ruler.display = true;
+            ui.actions.ruler.key = 'c';
+            ui.actions.rotate.display = true;
+            ui.actions.snapshot.display = true;
+            ui.actions.snapshot.key = 's';	
+            ui.actions.light.active = false;
+            ui.actions.layers.display = true;
+            ui.actions.layers.key = 'z';
+            lime.camera.maxFixedZoom = 4;
+            window.lime = lime;
+
+            ui.actions.lenstoggle = {
+                title: 'Open/Close Lens (Magnifier)',
+                key: 'm',
+                display: false,
+                task: (event) => {
+                    lensLayer.setVisible(!lensLayer.visible);
+                    lensDashboard.container.style.display = lensLayer.visible ? 'block' : 'none';
+                }
+            };
+
+            // 📘 HELP SECTION (clean text)
+            ui.actions.help.display = true;
+            ui.actions.help.html = `
+                <h2><strong>Rupe Magna Viewer User Guide</strong></h2>
+
+                <h4><strong>💡 Light Control</strong></h4>
+                <ul>
+                    <li>Click the light icon or press the ‘L’ key to adjust the light direction.</li>
+                    <li>To reposition the light: Move the mouse to change the light direction and use the reference lines to visualise its orientation.</li>
+                </ul>
+
+                <h4><strong>🎨 Image Rendering Modes</strong></h4>
+                <p>Different viewing modes can be selected from the Layers menu:</p>
+                <ul>
+                    <li>Light: Standard RTI view</li>
+                    <li>Normals: Normal map</li>
+                    <li>Diffuse: Diffuse reflection</li>
+                    <li>Specular: Specular reflection</li>
+                </ul>
+
+                <h4><strong>🔍 Interactive Lens (Magnifier)</strong></h4>
+                <p>Toggle the lens on or off: Press the ‘M’ key (Magnifier).</p>
+                <p>The lens appears as a circular area displaying the Normal Map selected in the ‘Lens Layer’, while the RTI view is shown outside it.</p>
+                <ul>
+                    <li>Move the lens: Click inside the lens and drag to reposition it.</li>
+                    <li>Adjust the lens size: When the cursor is inside the lens, use the mouse wheel to change its size.</li>
+                </ul>
+
+                <h4><strong>📏 Measurement (Ruler)</strong></h4>
+                <p>Press the ‘C’ key to enable the ruler and measure distances within the image.</p>
+                <p>When the ruler is active, you can measure by clicking two different points on the RTI image using the crosshair (+) cursor.</p>
+
+                <h4><strong>⌨️ Keyboard Shortcuts</strong></h4>
+                <ul>
+                    <li>M: Toggle Magnifier</li>
+                    <li>C: Toggle Ruler</li>
+                    <li>A: Rotate</li>
+                    <li>L: Light Control</li>
+                    <li>Home: Return to Main View</li>
+                    <li>+ / - : Zoom In / Out</li>
+                </ul>
+            `;
+        }
+
+        init();
+    };
+</script>
+
+</html>
