@@ -28,15 +28,14 @@
 }
 
 .openlime-scale {
-	position: fixed;
-	bottom: 0;
-	left: 12px;
-	width: 120px;
-	height: calc(5vh + 12px);
-	padding: 4px 0;
+	position: absolute;
+	bottom: 25px;
+	left: 0px;
+	width: 200px;
+	height: 40px;
+	padding: 15px;
 	fill: white;
-	z-index: 10001;
-	overflow: hidden;
+	z-index: 1000;
 }
 
 .openlime-scale>text {
@@ -141,15 +140,12 @@
 }
 
 .openlime-toolbar {
-	position: fixed;
+	position: absolute;
 	bottom: 0px;
-	left: 0px;
 	right: 0px;
 	padding: 5px;
-	background-color: #000;
+	background-color: transparent;
 	display: flex;
-	justify-content: center;
-	align-items: center;
 }
 
 .openlime-toolbar svg:not(:root) {
@@ -171,12 +167,6 @@
 	fill: #ffcc00 !important;
 }
 
-.openlime-light-active .openlime-button.openlime-light path[style],
-.openlime-button.openlime-light.openlime-light-active path[style] {
-	fill: #ffcc00 !important;
-	stroke: #ffcc00 !important;
-}
-
 .openlime-lightdir {
 	position: absolute;
 	top: 0px;
@@ -191,6 +181,65 @@
 	opacity: 0.4;
 	stroke-width: 1.5px;
 	vector-effect: non-scaling-stroke;
+}
+
+/* Light Sphere Controller */
+
+.openlime-lightsphere {
+	padding: 0;
+	position: absolute;
+	z-index: 200;
+	touch-action: none;
+	visibility: visible;
+}
+
+.openlime-lightsphere-coords {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 2px;
+	color: #333;
+	padding: 2px 4px;
+	touch-action: auto;
+}
+
+.openlime-lightsphere-coords span {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 4px;
+}
+
+.openlime-lightsphere-coords label {
+	color: #333;
+	font-size: inherit;
+	flex-shrink: 0;
+}
+
+.openlime-lightsphere-coords input {
+	flex: 1;
+	min-width: 0;
+}
+
+.openlime-lightsphere-coords input {
+	border: 1px solid #555;
+	border-radius: 2px;
+	padding: 1px 2px;
+	box-sizing: border-box;
+	font-size: inherit;
+	-moz-appearance: textfield;
+	appearance: textfield;
+}
+
+.openlime-lightsphere-coords input::-webkit-outer-spin-button,
+.openlime-lightsphere-coords input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.openlime-lightsphere-coords input[readonly] {
+	color: #aaa;
+	border-color: #333;
 }
 
 g.openlime-compact {
@@ -851,6 +900,53 @@ g.openlime-expand {
 }
 
 /*****************************************************/
+/* LensDashboard */
+
+.openlime-lens-dashboard {
+	/* -webkit-animation: fadein 1s linear forwards;
+	animation: fadein 1s linear forwards; */
+	visibility: visible !important;
+	/* background-color: rgb(200, 0, 0, 0.8) !important; */
+}
+
+.openlime-lens-dashboard.closed .openlime-lens-dashboard-annoswitch-bar {
+	visibility: hidden !important;
+}
+
+.openlime-lens-dashboard.closed {
+	/* -webkit-animation: fadeout 1s linear forwards;
+	animation: fadeout 1s linear forwards; */
+	visibility: hidden !important;
+}
+
+.openlime-lens-dashboard-button-bkg {
+	fill: #333 !important;
+	pointer-events: none;
+}
+
+.openlime-lens-dashboard-button.enabled {
+	pointer-events: auto;
+	cursor: pointer;
+}
+
+.enabled .openlime-lens-dashboard-button-bkg {
+	fill: #aaa !important;
+}
+
+.openlime-lens-dashboard-button:hover .openlime-lens-dashboard-button-bkg {
+	fill: #ccc !important;
+}
+
+.openlime-lens-dashboard-camera-active .openlime-lens-dashboard-button-bkg {
+	fill: #fff !important;
+}
+
+.openlime-lens-dashboard-light-active .openlime-lens-dashboard-button-bkg {
+	fill: #fff !important;
+}
+
+
+/*****************************************************/
 /* Ruler */
 
 .openlime-ruler {
@@ -869,14 +965,9 @@ g.openlime-expand {
 	fill: yellow;
 }
 
-.openlime-button.openlime-ruler path[style] {
-	stroke-width: 0.4 !important;
-}
-
 .openlime-button.openlime-ruler-active path[style] {
 	fill: yellow !important;
 	stroke: yellow !important;
-	stroke-width: 0.4 !important;
 }
 
 .openlime-overlaymsg {

@@ -10,6 +10,7 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
+    height: 100dvh;
     overflow: hidden;
     background: #000;
 }
@@ -17,39 +18,89 @@ html, body {
 /* ── OpenLIME toolbar ────────────────────────────────────────────
    Floating pill centred at the bottom, matching the mode-bar style.
    Overrides the skin.css full-width black bar.                      */
-.openlime-toolbar {
+#viewer-dock {
+    position: fixed;
     z-index: 1000;
-    left: 50% !important;
-    right: auto !important;
-    bottom: 8px !important;
+    left: 50%;
+    bottom: max(8px, env(safe-area-inset-bottom));
     transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100vw - 24px);
+    box-sizing: border-box;
+    border: 0;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+}
+.openlime-toolbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
     background: #000 !important;
-    border-radius: 999px !important;
+    border-radius: 0 !important;
     padding: 5px 8px !important;
     justify-content: center !important;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
 }
 
+.openlime-toolbar svg:not(:root) {
+    height: clamp(36px, 5vh, 46px);
+    min-width: 36px;
+    padding: 4px;
+    box-sizing: content-box;
+}
+.openlime-light-active .openlime-button.openlime-light path[style],
+.viewer-action-active path[style] {
+    fill: #ffcc00 !important;
+    stroke: #ffcc00 !important;
+}
+.openlime-button.openlime-ruler path[style] { stroke-width: 0.4 !important; }
+
 /* ── Rendering-mode bar ──────────────────────────────────────────
-   Semi-transparent pill centred at the top.
-   Hidden by default via opacity:0; the .open class reveals it
-   instantly on Z / layers-button press.                             */
-#mode-bar {
-    position: fixed;
-    top: 12px;
-    left: 50%;
-    transform: translateX(-50%);
+   Translucent drawer inside the bottom toolbar's shared frame.
+   Inline-size containment keeps the toolbar in charge of width.    */
+.mode-drawer {
+    display: grid;
+    grid-template-rows: 0fr;
+    contain: inline-size;
     opacity: 0;
+    transition: grid-template-rows 180ms ease, opacity 180ms ease;
+}
+#viewer-dock.layers-open .mode-drawer {
+    grid-template-rows: 1fr;
+    opacity: 1;
+}
+#mode-bar {
     pointer-events: none;
-    transition: opacity 0.2s ease;
-    z-index: 999;
-    display: flex;
-    gap: 3px;
+    min-height: 0;
+    overflow: hidden;
+    width: 100%;
     background: rgba(0,0,0,0.45);
-    padding: 5px 8px;
-    border-radius: 999px;
+}
+.mode-panel-content {
+    display: flex;
+    flex-direction: column;
+    container-type: inline-size;
+    padding: 10px 8px;
+    box-sizing: border-box;
+    max-height: calc(100dvh - var(--toolbar-height, 140px) - max(8px, env(safe-area-inset-bottom)) - max(12px, env(safe-area-inset-top)) - 4px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+.mode-buttons {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: clamp(1px, 0.5cqw, 3px);
+    max-width: 100%;
 }
 #mode-bar.open {
-    opacity: 1;
     pointer-events: auto;
 }
 #mode-bar button {
@@ -57,12 +108,19 @@ html, body {
     color: #fff;
     border: 1px solid rgba(255,255,255,0.5);
     border-radius: 999px;
-    padding: 0.4vh 0.9vh;
-    font-size: 1.3vh;
+    /* Keep height proportional to text; share spare width across the row. */
+    padding: 0.5em 0.4em;
+    font-size: clamp(7px, 2.8cqw, 12px);
     font-family: system-ui, sans-serif;
-    letter-spacing: 0.3px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0;
+    white-space: nowrap;
+    flex: 1 0 auto;
+    min-width: 0;
     cursor: pointer;
     transition: color 0.15s;
+    min-height: 0;
 }
 #mode-bar button:hover {
     color: rgba(255,255,255,0.7);
@@ -70,14 +128,62 @@ html, body {
 #mode-bar button.active {
     color: #ffcc00;
     border-color: #ffcc00;
-    font-weight: 600;
+    font-weight: 500;
 }
 
-/* ── Toggle button (Vector) ─────────────────────────────────────
-   Visually separated from the shading-mode buttons by a left
-   border acting as a divider.                                       */
+#mode-bar button:disabled { opacity: 0.4; cursor: default; }
+button:focus-visible { outline: 2px solid #ffcc00; outline-offset: 3px; }
+#mode-controls {
+    /* Child controls never contribute to the menu's intrinsic width. */
+    contain: inline-size;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    order: -1;
+    margin-bottom: 0;
+    transition: grid-template-rows 180ms ease, opacity 180ms ease, margin-bottom 180ms ease;
+}
+#mode-bar.has-mode-controls #mode-controls {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    margin-bottom: 8px;
+}
+.mode-controls-clip {
+    min-height: 0;
+    overflow: hidden;
+}
+.mode-controls-fields {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 6px 6px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.16);
+}
+#mode-controls label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    max-width: 100%;
+    color: #fff;
+    font: 500 clamp(10px, 2.8cqw, 12px)/1.25 system-ui, sans-serif;
+}
+#mode-controls input {
+    width: clamp(80px, 30cqw, 160px);
+    min-width: 70px;
+    height: 14px;
+    margin: 0;
+    accent-color: #ffcc00;
+}
+#mode-controls output { min-width: 3ch; font: inherit; font-variant-numeric: tabular-nums; }
+
+/* Vector shares the same compact row as the rendering modes. */
 #btn-vector {
-    margin-left: 12px;
+    margin-left: 0;
 }
 
 /* ── Help panel ──────────────────────────────────────────────────
@@ -92,13 +198,17 @@ html, body {
     pointer-events: none;
     transition: opacity 0.2s ease;
     z-index: 1001;
-    width: 320px;
+    width: var(--viewer-menu-width, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+    box-sizing: border-box;
+    max-height: calc(100dvh - 120px);
+    overflow: auto;
     background: rgba(0,0,0,0.85);
     padding: 16px 20px;
     border-radius: 16px;
     color: #fff;
     font-family: system-ui, sans-serif;
-    font-size: 1.25vh;
+    font-size: clamp(13px, 1.25vh, 16px);
     line-height: 1.55;
 }
 #help-panel.open {
@@ -106,8 +216,8 @@ html, body {
     pointer-events: auto;
 }
 #help-panel h5 {
-    margin: 8px 0 3px;
-    font-size: 1.25vh;
+    margin: 14px 0 6px;
+    font-size: inherit;
     color: #ffcc00;
     font-weight: 600;
     letter-spacing: 0.3px;
@@ -116,16 +226,64 @@ html, body {
     margin-top: 0;
 }
 #help-panel ul {
-    margin: 0 0 4px;
-    padding-left: 14px;
+    margin: 0 0 6px;
+    padding-left: 18px;
 }
 #help-panel li {
-    margin-bottom: 1px;
+    margin-bottom: 4px;
 }
 #help-panel p {
     margin: 0 0 3px;
     opacity: 0.85;
 }
+
+.panel-close {
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+#viewer-icon { position: fixed; top: 18px; left: 20px; z-index: 998; }
+#viewer-icon img { display: block; max-width: 160px; height: 46px; object-fit: contain; }
+#viewer-icon[hidden], #viewer-status[hidden] { display: none; }
+#viewer-status {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    display: inline-grid;
+    gap: 0;
+    width: max-content;
+    font: 500 clamp(12px, 1.3vh, 16px) system-ui, sans-serif;
+    pointer-events: none;
+}
+.loading-measure {
+    /* Keep the previously chosen line length without displaying any text. */
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    letter-spacing: 0.14em;
+    margin-right: -0.14em;
+}
+.loading-line { display: block; width: 100%; height: 1px; background: rgba(255,255,255,0.18); overflow: hidden; }
+.loading-fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    transform: scaleX(var(--load-progress, 0));
+    transform-origin: left;
+    transition: transform 180ms linear;
+}
+#demo.viewer-loading > canvas { visibility: hidden; }
+#demo.viewer-loading > .openlime-overlay { pointer-events: none; }
 
 /* ── Ruler scale badge ───────────────────────────────────────────
    SVG overlay produced by OpenLIME when the ruler is active.       */
@@ -137,9 +295,11 @@ html, body {
     background: #000;
     border-radius: 999px;
     padding: 0 8px;
-    height: calc(5vh + 10px);
+    height: var(--viewer-toolbar-height, calc(clamp(36px, 5vh, 46px) + 18px));
     box-sizing: border-box;
     overflow: hidden;
+    /* Native 200-unit SVG plus 8px padding on each side. */
+    width: 216px;
 }
 .openlime-scale text {
     fill: #fff;
@@ -152,8 +312,7 @@ html, body {
 }
 
 /* ── Viewer canvas bounds ────────────────────────────────────────
-   Full viewport — both toolbar and mode-bar float above the canvas
-   as pills, so no height clipping is needed.                        */
+   Full viewport — the toolbar and drawer float above the canvas.   */
 #demo {
     position: absolute;
     top: 0;
@@ -171,3 +330,72 @@ html, body {
 @media (max-width: 1024px) {
     .openlime-scale { display: none !important; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .mode-drawer, #mode-controls, #help-panel, .loading-fill { transition: none; }
+}
+
+/* Annotation panel and artwork: separate from the RTI canvas. */
+#viewer-dock { bottom: calc(max(8px, env(safe-area-inset-bottom)) + var(--annotation-keyboard-offset, 0px)); }
+.mode-drawer > #mode-bar, .mode-drawer > #annotation-panel { grid-area: 1 / 1; }
+#viewer-dock.annotation-active #mode-bar,
+#viewer-dock:not(.annotation-active) #annotation-panel { display: none; }
+#viewer-dock.annotations-open .mode-drawer { grid-template-rows: 1fr; opacity: 1; }
+.openlime-toolbar .openlime-annotations { color: #fff; }
+.openlime-toolbar .openlime-annotations:focus { outline: none; }
+.openlime-toolbar .openlime-annotations:focus-visible { filter: drop-shadow(0 0 3px rgba(255,204,0,.8)); }
+.openlime-toolbar .openlime-annotations path { fill: none !important; stroke: currentColor !important; }
+.openlime-toolbar .openlime-annotations.viewer-action-active { color: #ffcc00; }
+.annotation-overlay { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; overflow: hidden; }
+.annotation-overlay.annotation-painting { pointer-events: auto; touch-action: none; cursor: crosshair; }
+.annotation-overlay.annotation-selecting [data-annotation-id] { pointer-events: stroke; cursor: pointer; }
+#demo.viewer-loading > .annotation-overlay { visibility: hidden; }
+#annotation-panel { min-height: 0; overflow: hidden; width: 100%; color: #fff; background: rgba(0,0,0,.45); font: 400 13px/1.5 system-ui,sans-serif; }
+.annotation-content { box-sizing: border-box; display: flex; flex-direction: column; padding: 12px; max-height: min(56dvh, 440px, var(--annotation-panel-available, 100dvh)); overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; scrollbar-width: thin; scrollbar-color: #666 transparent; }
+.annotation-header { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; flex-shrink: 0; }
+.annotation-header h2 { font: 500 14px/1.4 system-ui,sans-serif; letter-spacing: .3px; margin: 0; flex: 1; min-width: 0; }
+.annotation-body { min-height: 0; }
+.annotation-panel button { font-family: inherit; }
+.annotation-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; flex: 0 1 auto; min-width: 0; min-height: 36px; padding: 6px 10px; background: transparent; color: #e5e5e5; border: 1px solid rgba(255,255,255,.24); border-radius: 18px; font-size: 12px; line-height: 1.3; cursor: pointer; transition: color 150ms ease,border-color 150ms ease,background-color 150ms ease; }
+.annotation-button:hover { color: #fff; border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.06); }
+.annotation-button:disabled { opacity: .35; cursor: default; }
+.annotation-button:focus-visible { outline: 2px solid #ffcc00; outline-offset: 2px; }
+.annotation-button.is-active, .annotation-button.annotation-primary { color: #ffcc00; border-color: rgba(255,204,0,.65); }
+.annotation-header .annotation-button { border: 0; padding: 6px; min-width: 34px; }
+.annotation-icon { display: block; width: 18px; height: 18px; flex-shrink: 0; pointer-events: none; }
+.annotation-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin: 9px 0 3px; }
+.annotation-row > .annotation-button { flex-grow: 1; }
+.annotation-list { display: grid; gap: 5px; max-height: 30dvh; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; scrollbar-width: thin; }
+.annotation-item { display: flex; align-items: center; gap: 5px; }
+.annotation-item > .annotation-button:not(.annotation-record) { border: 0; flex-shrink: 0; padding: 6px; }
+.annotation-button.annotation-record { flex: 1; display: grid; grid-template-columns: 8px minmax(0,1fr); text-align: left; justify-content: start; gap: 3px 9px; padding: 9px 10px; border-radius: 12px; }
+.annotation-record > span:not(.annotation-dot), .annotation-record small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.annotation-record small { grid-column: 2; font-size: 11px; opacity: .6; }
+.annotation-dot { width: 6px; height: 6px; border-radius: 50%; }
+.annotation-empty { padding: 10px 3px; }
+.annotation-empty-title, .annotation-detail-title { font-size: 14px; font-weight: 500; margin: 0 0 6px; }
+.annotation-hint { font-size: 11px; color: #bfbfbf; margin: 8px 0 2px; }
+.annotation-description { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 12px; color: #ddd; }
+.annotation-detail-title { overflow-wrap: anywhere; }
+.annotation-status { font-size: 11px; color: #ffdf73; margin: 9px 2px 0; }
+.annotation-status[hidden] { display: none; }
+.annotation-form { display: grid; gap: 11px; }
+.annotation-form label { display: grid; gap: 5px; font-size: 12px; color: #ddd; }
+.annotation-form input, .annotation-form textarea { box-sizing: border-box; width: 100%; min-width: 0; padding: 9px 11px; border: 1px solid rgba(255,255,255,.25); border-radius: 10px; background: rgba(255,255,255,.05); color: #fff; font: 400 14px/1.5 system-ui,sans-serif; }
+.annotation-form textarea { resize: vertical; min-height: 76px; max-height: 20dvh; }
+.annotation-form input:focus, .annotation-form textarea:focus { outline: none; border-color: #ffcc00; }
+.annotation-palette { display: flex; align-items: center; gap: 2px; }
+.annotation-button.annotation-color { position: relative; min-width: 30px; width: 30px; min-height: 32px; padding: 0; border-color: transparent; }
+.annotation-color::before { content: ''; display: block; width: 13px; height: 13px; border-radius: 50%; background: var(--swatch); }
+.annotation-color.is-active { border-color: #ffcc00; }
+.annotation-widths { gap: 3px; margin: 0; flex-wrap: nowrap; }
+.annotation-widths .annotation-button { font-size: 10px; padding: 6px; min-height: 30px; }
+.annotation-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (max-width: 600px) {
+    .annotation-content { padding: 10px; max-height: min(58dvh, calc(100dvh - var(--toolbar-height, 110px) - 32px), var(--annotation-panel-available, 100dvh)); }
+    .annotation-button { min-height: 40px; }
+    .annotation-header .annotation-button { min-height: 38px; }
+    .annotation-form input, .annotation-form textarea { font-size: 16px; }
+    .annotation-row { gap: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .annotation-button { transition: none; } }
