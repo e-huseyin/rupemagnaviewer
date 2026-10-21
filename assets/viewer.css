@@ -1,3 +1,5 @@
+@import url('./infinity-brand.css');
+
 /* ═══════════════════════════════════════════════════════════════════
    viewer.css — Rupe Magna RTI Viewer shared stylesheet
    Applies to all dataset viewer pages that link this file.
@@ -40,7 +42,7 @@ html, body {
     left: auto !important;
     right: auto !important;
     bottom: auto !important;
-    background: #000 !important;
+    background: var(--infinity-charcoal) !important;
     border-radius: 0 !important;
     padding: 5px 8px !important;
     justify-content: center !important;
@@ -57,8 +59,8 @@ html, body {
 }
 .openlime-light-active .openlime-button.openlime-light path[style],
 .viewer-action-active path[style] {
-    fill: #ffcc00 !important;
-    stroke: #ffcc00 !important;
+    fill: var(--infinity-yellow) !important;
+    stroke: var(--infinity-yellow) !important;
 }
 .openlime-button.openlime-ruler path[style] { stroke-width: 0.4 !important; }
 
@@ -111,7 +113,7 @@ html, body {
     /* Keep height proportional to text; share spare width across the row. */
     padding: 0.5em 0.4em;
     font-size: clamp(7px, 2.8cqw, 12px);
-    font-family: system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-weight: 500;
     line-height: 1.25;
     letter-spacing: 0;
@@ -126,13 +128,13 @@ html, body {
     color: rgba(255,255,255,0.7);
 }
 #mode-bar button.active {
-    color: #ffcc00;
-    border-color: #ffcc00;
+    color: var(--infinity-yellow);
+    border-color: var(--infinity-yellow);
     font-weight: 500;
 }
 
 #mode-bar button:disabled { opacity: 0.4; cursor: default; }
-button:focus-visible { outline: 2px solid #ffcc00; outline-offset: 3px; }
+button:focus-visible { outline: 2px solid var(--infinity-yellow); outline-offset: 3px; }
 #mode-controls {
     /* Child controls never contribute to the menu's intrinsic width. */
     contain: inline-size;
@@ -170,14 +172,14 @@ button:focus-visible { outline: 2px solid #ffcc00; outline-offset: 3px; }
     min-width: 0;
     max-width: 100%;
     color: #fff;
-    font: 500 clamp(10px, 2.8cqw, 12px)/1.25 system-ui, sans-serif;
+    font: 500 clamp(10px, 2.8cqw, 12px)/1.25 var(--font-sans);
 }
 #mode-controls input {
     width: clamp(80px, 30cqw, 160px);
     min-width: 70px;
     height: 14px;
     margin: 0;
-    accent-color: #ffcc00;
+    accent-color: var(--infinity-yellow);
 }
 #mode-controls output { min-width: 3ch; font: inherit; font-variant-numeric: tabular-nums; }
 
@@ -203,11 +205,11 @@ button:focus-visible { outline: 2px solid #ffcc00; outline-offset: 3px; }
     box-sizing: border-box;
     max-height: calc(100dvh - 120px);
     overflow: auto;
-    background: rgba(0,0,0,0.85);
+    background: rgba(40,40,40,0.97);
     padding: 16px 20px;
     border-radius: 16px;
     color: #fff;
-    font-family: system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-size: clamp(13px, 1.25vh, 16px);
     line-height: 1.55;
 }
@@ -218,7 +220,7 @@ button:focus-visible { outline: 2px solid #ffcc00; outline-offset: 3px; }
 #help-panel h5 {
     margin: 14px 0 6px;
     font-size: inherit;
-    color: #ffcc00;
+    color: var(--infinity-yellow);
     font-weight: 600;
     letter-spacing: 0.3px;
 }
@@ -260,7 +262,7 @@ button:focus-visible { outline: 2px solid #ffcc00; outline-offset: 3px; }
     display: inline-grid;
     gap: 0;
     width: max-content;
-    font: 500 clamp(12px, 1.3vh, 16px) system-ui, sans-serif;
+    font: 500 clamp(12px, 1.3vh, 16px) var(--font-sans);
     pointer-events: none;
 }
 .loading-measure {
@@ -303,7 +305,7 @@ button:focus-visible { outline: 2px solid #ffcc00; outline-offset: 3px; }
 }
 .openlime-scale text {
     fill: #fff;
-    font-family: system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-size: 20px;
 }
 .openlime-scale line {
@@ -343,24 +345,24 @@ button:focus-visible { outline: 2px solid #ffcc00; outline-offset: 3px; }
 #viewer-dock.annotations-open .mode-drawer { grid-template-rows: 1fr; opacity: 1; }
 .openlime-toolbar .openlime-annotations { color: #fff; }
 .openlime-toolbar .openlime-annotations:focus { outline: none; }
-.openlime-toolbar .openlime-annotations:focus-visible { filter: drop-shadow(0 0 3px rgba(255,204,0,.8)); }
+.openlime-toolbar .openlime-annotations:focus-visible { filter: drop-shadow(0 0 3px rgba(255,220,100,.8)); }
 .openlime-toolbar .openlime-annotations path { fill: none !important; stroke: currentColor !important; }
-.openlime-toolbar .openlime-annotations.viewer-action-active { color: #ffcc00; }
+.openlime-toolbar .openlime-annotations.viewer-action-active { color: var(--infinity-yellow); }
 .annotation-overlay { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; overflow: hidden; }
 .annotation-overlay.annotation-painting { pointer-events: auto; touch-action: none; cursor: crosshair; }
 .annotation-overlay.annotation-selecting [data-annotation-id] { pointer-events: stroke; cursor: pointer; }
 #demo.viewer-loading > .annotation-overlay { visibility: hidden; }
-#annotation-panel { min-height: 0; overflow: hidden; width: 100%; color: #fff; background: rgba(0,0,0,.45); font: 400 13px/1.5 system-ui,sans-serif; }
+#annotation-panel { min-height: 0; overflow: hidden; width: 100%; color: #fff; background: rgba(0,0,0,.45); font: 400 13px/1.5 var(--font-sans); }
 .annotation-content { box-sizing: border-box; display: flex; flex-direction: column; padding: 12px; max-height: min(56dvh, 440px, var(--annotation-panel-available, 100dvh)); overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; scrollbar-width: thin; scrollbar-color: #666 transparent; }
 .annotation-header { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; flex-shrink: 0; }
-.annotation-header h2 { font: 500 14px/1.4 system-ui,sans-serif; letter-spacing: .3px; margin: 0; flex: 1; min-width: 0; }
+.annotation-header h2 { font: 500 14px/1.4 var(--font-sans); letter-spacing: .3px; margin: 0; flex: 1; min-width: 0; }
 .annotation-body { min-height: 0; }
 .annotation-panel button { font-family: inherit; }
 .annotation-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; flex: 0 1 auto; min-width: 0; min-height: 36px; padding: 6px 10px; background: transparent; color: #e5e5e5; border: 1px solid rgba(255,255,255,.24); border-radius: 18px; font-size: 12px; line-height: 1.3; cursor: pointer; transition: color 150ms ease,border-color 150ms ease,background-color 150ms ease; }
 .annotation-button:hover { color: #fff; border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.06); }
 .annotation-button:disabled { opacity: .35; cursor: default; }
-.annotation-button:focus-visible { outline: 2px solid #ffcc00; outline-offset: 2px; }
-.annotation-button.is-active, .annotation-button.annotation-primary { color: #ffcc00; border-color: rgba(255,204,0,.65); }
+.annotation-button:focus-visible { outline: 2px solid var(--infinity-yellow); outline-offset: 2px; }
+.annotation-button.is-active, .annotation-button.annotation-primary { color: var(--infinity-yellow); border-color: rgba(255,220,100,.65); }
 .annotation-header .annotation-button { border: 0; padding: 6px; min-width: 34px; }
 .annotation-icon { display: block; width: 18px; height: 18px; flex-shrink: 0; pointer-events: none; }
 .annotation-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin: 9px 0 3px; }
@@ -381,13 +383,13 @@ button:focus-visible { outline: 2px solid #ffcc00; outline-offset: 3px; }
 .annotation-status[hidden] { display: none; }
 .annotation-form { display: grid; gap: 11px; }
 .annotation-form label { display: grid; gap: 5px; font-size: 12px; color: #ddd; }
-.annotation-form input, .annotation-form textarea { box-sizing: border-box; width: 100%; min-width: 0; padding: 9px 11px; border: 1px solid rgba(255,255,255,.25); border-radius: 10px; background: rgba(255,255,255,.05); color: #fff; font: 400 14px/1.5 system-ui,sans-serif; }
+.annotation-form input, .annotation-form textarea { box-sizing: border-box; width: 100%; min-width: 0; padding: 9px 11px; border: 1px solid rgba(255,255,255,.25); border-radius: 10px; background: rgba(255,255,255,.05); color: #fff; font: 400 14px/1.5 var(--font-sans); }
 .annotation-form textarea { resize: vertical; min-height: 76px; max-height: 20dvh; }
-.annotation-form input:focus, .annotation-form textarea:focus { outline: none; border-color: #ffcc00; }
+.annotation-form input:focus, .annotation-form textarea:focus { outline: none; border-color: var(--infinity-yellow); }
 .annotation-palette { display: flex; align-items: center; gap: 2px; }
 .annotation-button.annotation-color { position: relative; min-width: 30px; width: 30px; min-height: 32px; padding: 0; border-color: transparent; }
 .annotation-color::before { content: ''; display: block; width: 13px; height: 13px; border-radius: 50%; background: var(--swatch); }
-.annotation-color.is-active { border-color: #ffcc00; }
+.annotation-color.is-active { border-color: var(--infinity-yellow); }
 .annotation-widths { gap: 3px; margin: 0; flex-wrap: nowrap; }
 .annotation-widths .annotation-button { font-size: 10px; padding: 6px; min-height: 30px; }
 .annotation-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }

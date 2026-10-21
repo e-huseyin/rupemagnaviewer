@@ -11,16 +11,18 @@
   <title>Rupe Magna Viewer</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Explore eleven rock art figures from Rupe Magna through interactive RTI. Developed within 3DARCHEO, a use case of the INFINITY Horizon Europe project." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/infinity-brand.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       height: 100%;
       overflow: hidden;
-      font-family: 'Inter', system-ui, sans-serif;
-      background: #edeae4;
+      font-family: var(--font-sans);
+      background: var(--infinity-charcoal);
     }
 
     .layout {
@@ -35,7 +37,8 @@
       flex-shrink: 0;
       height: 100vh;
       overflow: hidden;
-      background: #edeae4;
+      background: var(--infinity-charcoal);
+      color: var(--infinity-paper);
       display: flex;
       flex-direction: column;
       padding: 36px 32px 28px;
@@ -47,43 +50,74 @@
       overflow-y: auto;
       padding-right: 4px;
     }
-    #panel-content::-webkit-scrollbar { display: none; }
-    #panel-content { scrollbar-width: none; -ms-overflow-style: none; }
+    #panel-content::-webkit-scrollbar { width: 3px; }
+    #panel-content::-webkit-scrollbar-thumb { background: #646464; border-radius: 3px; }
+    #panel-content { scrollbar-width: thin; scrollbar-color: #646464 transparent; }
     .panel::after {
       content: '';
       position: absolute;
       top: 0; right: 0; bottom: 0;
       width: 1px;
-      background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.08) 30%, rgba(0,0,0,0.05) 70%, transparent);
+      background: rgba(255,255,255,0.12);
+      pointer-events: none;
     }
     .panel::before {
       content: '';
       position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 30% 10%, rgba(200,160,80,0.08) 0%, transparent 55%);
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--infinity-yellow);
       pointer-events: none;
     }
+    .project-identity {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .project-link {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1.8px;
+      text-decoration: none;
+      color: var(--infinity-paper);
+    }
+    .project-link:hover { color: var(--infinity-yellow); }
+    .project-usecase {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.8px;
+      color: var(--infinity-purple);
+    }
+    a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+      outline: 2px solid var(--infinity-yellow);
+      outline-offset: 4px;
+    }
     .panel-title {
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: 35px;
-      font-weight: 700;
-      color: #1a1612;
+      font-family: var(--font-serif);
+      font-size: 46px;
+      font-weight: 400;
+      color: var(--infinity-yellow);
       line-height: 1.05;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
       position: relative;
     }
+    .home-link { color: inherit; text-decoration: none; }
     .panel-subtitle {
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: 15px;
+      font-family: var(--font-sans);
+      font-size: 14px;
       font-weight: 400;
-      color: #7a6e5c;
+      color: #c8c8c8;
       margin-bottom: 24px;
       position: relative;
     }
     .panel-abstract {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 400;
-      color: #5a5048;
+      color: #dedede;
       line-height: 1.75;
       margin-bottom: 24px;
       position: relative;
@@ -96,80 +130,82 @@
       position: relative;
     }
     .stat-box {
-      background: rgba(0,0,0,0.05);
-      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.15);
       border-radius: 6px;
       padding: 10px 12px;
     }
     .stat-num {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-serif);
       font-size: 22px;
       font-weight: 700;
-      color: #8a6030;
+      color: var(--infinity-yellow);
       line-height: 1;
     }
     .stat-lbl {
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.6px;
-      color: #8a7d6a;
+      color: #c8c8c8;
       margin-top: 3px;
     }
     .divider {
       border: none;
-      border-top: 1px solid rgba(0,0,0,0.1);
+      border-top: 1px solid rgba(255,255,255,0.18);
       margin: 0 0 20px;
       position: relative;
     }
     .author-block { position: relative; margin-bottom: 16px; }
-    .author-name { font-size: 13px; font-weight: 500; color: #1a1612; margin-bottom: 4px; }
-    .author-role { font-size: 11px; color: #6a5e50; margin-bottom: 8px; }
+    .author-name { font-size: 13px; font-weight: 500; color: var(--infinity-paper); margin-bottom: 4px; }
+    .author-role { font-size: 11px; color: #c8c8c8; margin-bottom: 8px; }
     .social-row { display: flex; gap: 14px; margin-bottom: 10px; }
     .social-link {
       display: inline-flex;
       align-items: center;
-      color: rgba(0,0,0,0.38);
+      color: #b4b4b4;
       text-decoration: none;
       transition: color 0.2s;
     }
-    .social-link:hover { color: rgba(0,0,0,0.82); }
+    .social-link:hover { color: var(--infinity-yellow); }
     .social-link svg { width: 18px; height: 18px; display: block; }
     .abstract-link {
-      color: #8a6030;
+      color: var(--infinity-yellow);
       text-decoration: none;
-      border-bottom: 1px solid rgba(138,96,48,0.35);
+      border-bottom: 1px solid rgba(255,220,100,0.4);
       font-weight: 500;
       transition: color 0.15s, border-color 0.15s;
     }
     .abstract-link:hover {
-      color: #5a3c18;
-      border-bottom-color: rgba(90,60,24,0.7);
+      color: var(--infinity-paper);
+      border-bottom-color: var(--infinity-paper);
     }
 
     .panel-footer {
       margin-top: auto;
       position: relative;
-      border-top: 1px solid rgba(0,0,0,0.1);
+      border-top: 1px solid rgba(255,255,255,0.18);
       padding-top: 16px;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
     .footer-row { display: flex; justify-content: space-between; align-items: baseline; }
-    .footer-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: #9a8a78; }
-    .footer-val { font-size: 10px; color: #5a4e42; text-align: right; }
+    .footer-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: #c8c8c8; }
+    .footer-val { font-size: 11px; color: #dedede; text-align: right; }
+    .project-credit { font-size: 10px; line-height: 1.5; color: #b4b4b4; margin-bottom: 12px; }
     .license-tag {
       display: inline-block;
-      border: 1px solid rgba(130,90,30,0.3);
+      border: 1px solid rgba(255,220,100,0.4);
       border-radius: 3px;
       padding: 2px 7px;
       font-size: 10px;
-      color: #6a5030;
+      color: var(--infinity-yellow);
     }
 
     /* ── Right: strip + viewer ── */
     main {
       flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       height: 100vh;
@@ -182,43 +218,43 @@
       height: 120px;
       display: grid;
       grid-template-columns: repeat(11, minmax(72px, 1fr));
+      grid-template-rows: minmax(0, 1fr);
       gap: 6px;
       padding: 8px 8px 6px;
-      background: #edeae4;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+      background: var(--infinity-charcoal);
+      border-bottom: 1px solid rgba(255,255,255,0.18);
       position: relative;
       z-index: 2;
       overflow-x: auto;
+      overflow-y: hidden;
     }
     .fig-strip::-webkit-scrollbar { height: 3px; }
-    .fig-strip::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
+    .fig-strip::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 2px; }
     .fig-strip::-webkit-scrollbar-track { background: transparent; }
 
     .fig-card {
-      background: #edeae4;
+      background: transparent;
+      min-height: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow: visible;
       cursor: pointer;
       border-radius: 4px;
-      border-bottom: 3px solid transparent;
-      transition: border-color 0.15s, opacity 0.15s, transform 0.15s;
-      opacity: 0.3;
-    }
-    .fig-card:hover:not(.unavailable) {
-      border-bottom-color: rgba(200,160,80,0.55);
-      transform: translateY(-2px);
-      z-index: 1;
-      opacity: 0.7;
-    }
-    .fig-card.active {
-      border-bottom-color: #c8a055;
-      transform: translateY(-2px);
+      border: none;
       opacity: 1;
     }
+    .fig-card:hover:not(.unavailable) {
+      z-index: 1;
+    }
+    .fig-card:hover:not(.unavailable) img {
+      transform: scale(1.05);
+    }
+    .fig-card:hover:not(.unavailable) img,
+    .fig-card.active img {
+      filter: url('#figure-highlight');
+    }
     .fig-card.unavailable { opacity: 0.35; cursor: not-allowed; }
-    .fig-card.unavailable img { filter: grayscale(100%); }
 
     .fig-card img {
       width: 100%;
@@ -226,6 +262,8 @@
       object-fit: contain;
       display: block;
       padding: 0;
+      filter: brightness(0) invert(1);
+      transition: transform 0.15s ease;
     }
 
     .fig-card-label { display: none; }
@@ -234,7 +272,7 @@
     .viewer-area {
       flex: 1;
       position: relative;
-      background: #edeae4;
+      background: var(--infinity-charcoal);
       overflow: hidden;
     }
 
@@ -247,10 +285,27 @@
       pointer-events: none;
     }
     .viewer-placeholder p {
-      font-family: 'Playfair Display', serif;
-      font-size: 20px;
-      color: rgba(0,0,0,0.12);
+      font-family: var(--font-serif);
+      font-size: 36px;
+      color: var(--infinity-yellow);
+      text-align: center;
+      padding: 24px;
     }
+    .viewer-placeholder span {
+      display: block;
+      margin-top: 12px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.6;
+      color: #c8c8c8;
+    }
+    .figure-heading { font-size: 23px; font-weight: 400; color: var(--infinity-paper); line-height: 1.2; margin-bottom: 12px; }
+    .figure-sector { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--infinity-purple); margin-bottom: 16px; }
+    .figure-params { border-top: 1px solid rgba(255,255,255,0.18); margin-top: 4px; padding-top: 12px; display: flex; flex-direction: column; gap: 7px; }
+    .param-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500; color: #c8c8c8; }
+    .dataset-publication { border-top: 1px solid rgba(255,255,255,0.18); padding-top: 16px; margin-bottom: 24px; }
+    .dataset-title { font-size: 14px; font-weight: 500; line-height: 1.55; margin-bottom: 10px; }
+    .dataset-publication .panel-abstract { margin-bottom: 0; }
 
     #viewer-frame {
       width: 100%;
@@ -262,24 +317,23 @@
     /* Responsive */
     @media (max-width: 1200px) {
       .panel { width: 400px; padding: 28px 28px 24px; }
-      .panel-abstract { font-size: 11px; }
     }
     .fig-refs {
       margin-top: 14px;
       padding-top: 11px;
-      border-top: 1px solid rgba(0,0,0,0.08);
+      border-top: 1px solid rgba(255,255,255,0.18);
     }
     .refs-heading {
-      font-size: 9px;
+      font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      color: #9a8a78;
+      color: var(--infinity-green);
       margin-bottom: 6px;
       font-weight: 600;
     }
     .ref-item {
-      font-size: 10px;
-      color: #6a5e50;
+      font-size: 11px;
+      color: #b4b4b4;
       line-height: 1.55;
       margin-bottom: 3px;
     }
@@ -292,7 +346,9 @@
         width: 100%; height: auto; overflow: visible;
         padding: 28px 20px 20px;
       }
-      .panel::after, .panel::before { display: none; }
+      .panel::after { display: none; }
+      .project-identity { margin-bottom: 24px; }
+      .panel-title { font-size: 42px; }
       #panel-content { overflow: visible; height: auto; flex: none; }
 
       /* fig-strip inside panel on mobile */
@@ -302,10 +358,11 @@
         -webkit-overflow-scrolling: touch;
         height: 130px;
         gap: 8px;
-        padding: 0 20px 10px 0;
+        padding: 4px 20px 10px 0;
         margin: 0 -20px 20px -20px;
         padding-left: 20px;
-        background: transparent;
+        background: var(--infinity-charcoal);
+        border-bottom: none;
         box-shadow: none;
         grid-template-columns: unset;
       }
@@ -323,11 +380,25 @@
 </head>
 <body>
 
+<!-- Preserve each thumbnail's transparency while applying the exact brand yellow. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute; pointer-events:none;">
+  <defs>
+    <filter id="figure-highlight" color-interpolation-filters="sRGB">
+      <feFlood style="flood-color: var(--infinity-yellow);" />
+      <feComposite in2="SourceAlpha" operator="in" />
+    </filter>
+  </defs>
+</svg>
+
 <div class="layout">
 
   <!-- ── Left panel ── -->
   <aside class="panel">
-    <h1 class="panel-title" onclick="resetHome()" style="cursor:pointer;">Rupe Magna Viewer</h1>
+    <div class="project-identity">
+      <a class="project-link" href="https://infinity-eccch.eu/" target="_blank" rel="noopener noreferrer" aria-label="INFINITY project website">INFINITY ↗</a>
+      <span class="project-usecase">[3DARCHEO]</span>
+    </div>
+    <h1 class="panel-title"><a class="home-link" href="./" onclick="resetHome(); return false;">Rupe Magna Viewer</a></h1>
     <p class="panel-subtitle">Interactive RTI Viewer for Rock Art Figures</p>
     <hr class="divider">
     <div id="panel-content">
@@ -363,10 +434,17 @@
       six sectors of the rock surface using a custom-built portable dome (Ø 460 mm,
       48 LEDs, 6 rings, Fujifilm X-S20). Eleven representative figures — among them
       praying figures, warriors, goats, and geometric symbols — were selected for
-      this open dataset. All data are published as FAIR-compliant open resources in
+      this viewer. All data are published as FAIR-compliant open resources in
       accordance with the London Charter [8] and the ECCCH framework [9],
       following the FAIR Guiding Principles for scientific data management [10].
     </p>
+    <section class="dataset-publication" aria-labelledby="dataset-title">
+      <p class="refs-heading">Open dataset · Zenodo</p>
+      <h2 class="dataset-title" id="dataset-title">
+        <a class="abstract-link" href="https://doi.org/10.5281/zenodo.21300390" target="_blank" rel="noopener noreferrer">Rupe Magna — Reflectance Transformation Imaging (RTI) Datasets for Digital Documentation (RAW, PTM, and Processed Images)</a>
+      </h2>
+      <p class="panel-abstract">The RTI datasets presented in this viewer, along with additional acquisitions from the Rupe Magna survey, are openly available on Zenodo as RAW files (where available), PTM models and processed images.</p>
+    </section>
     <div class="fig-refs">
       <p class="refs-heading">References</p>
       <p class="ref-item">[1] A. Fossati. "La rupe magna e l'Arte rupestre in valtellina," in <em>Rupe Magna</em>. Grosio: Consorzio Parco, 1995, pp. 15–18.</p>
@@ -390,6 +468,7 @@
     </div>
 
     <div class="panel-footer">
+      <p class="project-credit">INFINITY · Horizon Europe<br>Grant Agreement No. 101233051</p>
       <div style="padding-top: 4px;">
         <div class="footer-row" style="align-items:center;">
           <span class="footer-label">Hüseyin Erdoğan</span>
@@ -479,9 +558,9 @@
 
     <div class="viewer-area">
       <div class="viewer-placeholder" id="viewer-placeholder">
-        <p>Select a figure above</p>
+        <p>Select a figure above<span>Explore 11 rock art figures through interactive lighting.</span></p>
       </div>
-      <iframe id="viewer-frame" src="" allowfullscreen></iframe>
+      <iframe id="viewer-frame" src="" title="Interactive RTI viewer for the selected rock art figure" allowfullscreen></iframe>
     </div>
 
   </main>
@@ -600,12 +679,11 @@
     const fig = figureData[url];
     if (fig) {
       const [sector, figName] = fig.title.split(' — ');
-      const lbl = 'font-size:9px;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;color:#1a1612;';
       const paramsHtml = fig.params ? `
-        <div style="border-top:1px solid rgba(0,0,0,0.1);margin-top:4px;padding-top:12px;display:flex;flex-direction:column;gap:5px;">
-          <div class="footer-row"><span style="${lbl}">ISO</span><span class="footer-val">${fig.params.iso}</span></div>
-          <div class="footer-row"><span style="${lbl}">Aperture</span><span class="footer-val">${fig.params.aperture}</span></div>
-          <div class="footer-row"><span style="${lbl}">Shutter Speed</span><span class="footer-val">${fig.params.shutter}</span></div>
+        <div class="figure-params">
+          <div class="footer-row"><span class="param-label">ISO</span><span class="footer-val">${fig.params.iso}</span></div>
+          <div class="footer-row"><span class="param-label">Aperture</span><span class="footer-val">${fig.params.aperture}</span></div>
+          <div class="footer-row"><span class="param-label">Shutter Speed</span><span class="footer-val">${fig.params.shutter}</span></div>
         </div>` : '';
       const tmp = document.createElement('div');
       tmp.innerHTML = fig.content;
@@ -613,10 +691,8 @@
       const refsHtml = refsEl ? refsEl.outerHTML : '';
       if (refsEl) refsEl.remove();
       pc.innerHTML = `
-        <p style="font-size:17px; font-weight:700; color:#1a1612; line-height:1.2; margin-bottom:10px;">${figName}</p>
-        <hr style="border:none; border-top:1px solid rgba(0,0,0,0.1); margin:0 0 10px;">
-        <p style="font-size:12px; text-transform:uppercase; letter-spacing:0.8px; color:#9a8a78; margin-bottom:10px;">${sector}</p>
-        <hr style="border:none; border-top:1px solid rgba(0,0,0,0.1); margin:0 0 16px;">
+        <p class="figure-heading">${figName}</p>
+        <p class="figure-sector">${sector}</p>
         ${tmp.innerHTML}${paramsHtml}${refsHtml}`;
     } else {
       pc.innerHTML = defaultContent;

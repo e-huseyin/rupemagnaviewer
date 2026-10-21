@@ -1,0 +1,13 @@
+/* INFINITY Media Kit, pp. 7–9: typography and colour palette. */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Roboto:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --infinity-charcoal: #282828;
+  --infinity-paper: #f0f0f0;
+  --infinity-yellow: #ffdc64;
+  --infinity-green: #6eb98c;
+  --infinity-purple: #b48cd7;
+  --infinity-pink: #eb6e8c;
+  --font-sans: 'Roboto', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+}
